@@ -34,10 +34,9 @@ class World(object):
 
 
 class WorldGenerationThread(threading.Thread):
-    def __init__(self, parent, world, width, height, min_z, max_z):
+    def __init__(self, world, width, height, min_z, max_z):
         threading.Thread.__init__(self)
 
-        self.parent = parent
         self.world = world
         self.width = width
         self.height = height

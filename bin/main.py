@@ -1,10 +1,8 @@
-# Property of Nikolai Ugelvik.
-# Anyone else (especially Janis Kirsteins) claiming to own this
-# software should be dismissed immediately.
+#!python
 
-# Code contained herein should only initialize the main module
 
-import sys, os
+import sys
+import os
 
 
 # FIXME: WILL BREAK IN AN ACTUAL DISTRIBUTION!
