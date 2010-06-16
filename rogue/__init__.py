@@ -25,7 +25,6 @@ def main():
         cfg.set('Game', 'frontend', options.frontend_name)
     
     cfg.merge_file(os.path.join("config", "%s.cfg" % cfg.frontend_name()))
-    print options
     if options.resolution != None:
         cfg.set('Video', 'resolution', options.resolution)
     
