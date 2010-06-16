@@ -28,6 +28,9 @@ class StateStack(object):
     def __init__(self):
 		""" Initializes an empty stack """
 		self.stack = []
+        
+    def get_state(self):
+        return None if len(self.stack) == 0 else self.stack[-1:][0]
 		
     def add(self, state, **kwargs):
         """ Loads the state in a separate thread and adds to stack once it has loaded """
@@ -43,6 +46,9 @@ class StateStack(object):
     def add_loaded_state(self, state):
         """ Adds a state that has finished loading to the stack """
         self.loading_func = None
+        top = self.stack[-1:]
+        if len(top) == 1:
+            self.remove(top[0])
         self.stack.append(state)
         state.handle_added()
         

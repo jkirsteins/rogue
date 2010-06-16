@@ -1,35 +1,19 @@
-import pygame
-import pygame.event
 
-
-import world
-
-
-from rogue.state.statestack import StateStack
-from rogue.state.mainmenustate import MainMenuState
+from rogue.backend.backend import Backend
+from rogue.factory import FrontendFactory
 
 
 class Game(object):
 
-    def __init__(self, renderer):
-        self.renderer = renderer
-        self.statestack = StateStack()
-        self.statestack.add(MainMenuState(self.statestack))
-
-        self.main_loop()
+    def __init__(self, config):
         
-        self.statestack.unload()
+        self.config = config
         
-    def handle_event(self, event):
-        if event.type == pygame.QUIT:
-            self.is_running = False
-		
-    def main_loop(self):
-        self.is_running = True
-        while( self.is_running ):
-            for event in pygame.event.get():
-                self.handle_event(event)
-            self.statestack.update()
-            self.renderer.render()
+        self.config.set("__metadata__", "name", "amazorogue")
+        self.config.set("__metadata__", "version", "0.1")
         
-
+        self.backend = Backend(self)
+        self.frontend = FrontendFactory(self, self.config.frontend_name())
+        
+    def run(self):
+        self.frontend.main_loop()

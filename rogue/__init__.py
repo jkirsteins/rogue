@@ -1,19 +1,34 @@
-from . import game
+import os.path
+from optparse import OptionParser
 
 
-RENDERER = "pygame" # Load this from a config object
-
-
-def get_renderer(ttype):
-    try:
-        ttype = 'renderer.' + ttype + '.renderer'
-        renderer = __import__(ttype, globals(), locals(), ['renderer'], -1)
-        return renderer.Renderer()
-    except:
-        print("Could not find renderer {0}. Aborting.".format(ttype))
+from rogue.game import Game
+from rogue.config import Config
 
 
 def main():
-    renderer = get_renderer(RENDERER)
-    gobject = game.Game(renderer)
 
+    parser = OptionParser()
+    parser.add_option("-f", "--frontend", 
+                  type="string",
+                  dest="frontend_name",
+                  help="use frontend called NAME", 
+                  metavar="NAME")
+    parser.add_option("-r", "--resolution", 
+                  type="string",
+                  dest="resolution",
+                  help="use specified resolution", metavar="WIDTHxHEIGHT")
+    (options, args) = parser.parse_args()
+    
+    cfg = Config(os.path.join("config", "config.cfg"))
+    if options.frontend_name != None:
+        cfg.set('Game', 'frontend', options.frontend_name)
+    
+    cfg.merge_file(os.path.join("config", "%s.cfg" % cfg.frontend_name()))
+    print options
+    if options.resolution != None:
+        cfg.set('Video', 'resolution', options.resolution)
+    
+    game = Game(cfg)
+    game.run()
+    
