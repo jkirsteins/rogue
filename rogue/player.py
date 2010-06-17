@@ -1,27 +1,24 @@
-import libtcod
+from libtcod import map_compute_fov
 
 
-class Player(object):
+from rogue.being import Being
+
+
+class Player(Being):
+    """ Player controllable character """
     
-    def __init__(self, backend):
-        self.x = 0
-        self.y = 0
-        self.fov_radius = 5
-        self.backend = backend
+    def __init__(self, backend, config):
+        Being.__init__(self, backend, config)
         
-    def move(self, dx, dy):
-        if self.backend.can_move(self.x + dx, self.y + dy):
-            self.x, self.y = self.x + dx, self.y + dy
-        self.backend.recompute_fov()
+    
+    def place(self, x, y):
+        res = Being.place(self, x, y)
+        if res == True:
+            self.compute_fov()
+        return res
         
-    def move_up(self):
-        self.move(0, -1)
-        
-    def move_down(self):
-        self.move(0, 1)
-        
-    def move_right(self):
-        self.move(1, 0)
-        
-    def move_left(self):
-        self.move(-1, 0)
+    def compute_fov(self):
+        self.fov = map_compute_fov(self.backend.current_area.tcod_map,
+                                self.x,
+                                self.y,
+                                4)    
